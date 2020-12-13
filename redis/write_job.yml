@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-list-writer
+spec:
+  template:
+    spec:
+      containers:
+      - name: redis-list-writer
+        image: goku321/redis-cluster-list:v1.1
+        imagePullPolicy: IfNotPresent
+        command: ["./main"]
+        env:
+        - name: REDIS_ADDRESS
+          value: "my-release-redis-master.default.svc.cluster.local:6379"
+        - name: REDIS_PASSWORD
+          value: k0FhHVPRep
+        - name: LIST_NAME
+          value: my-list
+        - name: NO_LIST_ITEMS_TO_WRITE
+          value: "200"
+        args: ["write"]
+      restartPolicy: Never
+  backoffLimit: 4

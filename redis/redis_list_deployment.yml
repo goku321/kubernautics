@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-test
+  labels:
+    app: redis-test
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: redis-test
+  template:
+    metadata:
+      labels:
+        app: redis-test
+    spec:
+      containers:
+      - name: redis-worker
+        image: kedacore/tests-redis-lists:824031e
+        imagePullPolicy: IfNotPresent
+        args: ["read"]
+        env:
+        - name: REDIS_HOST
+          value: redis.redis.svc.cluster.local
+        - name: REDIS_PORT
+          value: "6379"
+        - name: LIST_NAME
+          value: my-list
+        - name: REDIS_PASSWORD
+          value: my-password
+        - name: READ_PROCESS_TIME
+          value: "200"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: redis-test
+spec:
+  scaleTargetRef:
+    name: redis-test
+  pollingInterval: 5
+  cooldownPeriod: 30
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  triggers:
+  - type: redis
+    metadata:
+      hostFromEnv: REDIS_HOST
+      portFromEnv: REDIS_PORT
+      listName: my-list
+      listLength: "5"
+    authenticationRef:
+      name: keda-redis-list-triggerauth

@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta2
+kind: DaemonSet
+metadata:
+    name: ssd-monitor
+spec:
+    selector:
+        matchLabels:
+            app: ssd-monitor
+    template:
+        metadata:
+            labels:
+                app: ssd-monitor
+                pod-type: daemon-set
+        spec:
+            nodeSelector:
+                disk: ssd
+            containers:
+                - name: main
+                  image: goku321/go-handler:v1.0

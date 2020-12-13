@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta2
+kind: ReplicaSet
+metadata:
+    name: kube1
+spec:
+    replicas: 3
+    selector:
+        matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - kube
+    template:
+        metadata:
+            labels:
+                app: kube
+        spec:
+            containers:
+            - name: kube
+              image: goku321/go-handler:v1.0 

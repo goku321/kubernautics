@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: exporter
+spec:
+    template:
+        metadata:
+            labels:
+                app: batch-job
+        spec:
+            restartPolicy: OnFailure
+            containers:
+                - name: exporter
+                  image: luksa/batch-job
