@@ -12,9 +12,9 @@ spec:
         command: ["./main"]
         env:
         - name: REDIS_ADDRESS
-          value: "my-release-redis-master.default.svc.cluster.local:6379"
+          value: "10.3.255.10:6379"
         - name: REDIS_PASSWORD
-          value: k0FhHVPRep
+          value: 26uR4NMc7k
         - name: LIST_NAME
           value: my-list
         - name: NO_LIST_ITEMS_TO_WRITE
