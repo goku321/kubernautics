@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	redis "github.com/go-redis/redis/v8"
 )
@@ -42,6 +43,36 @@ func writeToRedisList() error {
 	return nil
 }
 
+func readFromRedisList() error {
+	addrString := os.Getenv("REDIS_ADDRESS")
+	addrs := splitAndTrim(addrString, ",", " ")
+	pass := os.Getenv("REDIS_PASSWORD")
+	opts := redis.ClusterOptions{
+		Addrs:    addrs,
+		Password: pass,
+	}
+	client := redis.NewClusterClient(&opts)
+	list := os.Getenv("LIST_NAME")
+	waitTime, err := strconv.ParseInt(os.Getenv("READ_PROCESS_TIME"), 10, 32)
+	if err != nil {
+		return fmt.Errorf("read process time should be a number: %s", err.Error())
+	}
+
+	for {
+		len, err := client.LLen(context.Background(), list).Result()
+		if err != nil {
+			return err
+		}
+		if len > 0 {
+			x := client.LPop(context.Background(), list)
+			if x.Err() != nil {
+				return fmt.Errorf("failed to read from redis list: %s", x.Err().Error())
+			}
+		}
+		time.Sleep(time.Millisecond * time.Duration(waitTime))
+	}
+}
+
 func main() {
 	// Print env and args.
 	log.Println("REDIS_ADDRESS: ", os.Getenv("REDIS_ADDRESS"))
@@ -61,7 +92,11 @@ func main() {
 		}
 		log.Println("write to redis list is successful")
 	} else if action == "read" {
-
+		err := readFromRedisList()
+		if err != nil {
+			log.Fatalf("read from redis list failed: %v\n", err)
+		}
+		log.Println("read from redis list is successful")
 	} else {
 		log.Printf("unknown action: %s\n", action)
 	}
