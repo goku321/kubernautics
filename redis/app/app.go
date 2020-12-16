@@ -20,9 +20,27 @@ func splitAndTrim(s, sep, toTrim string) []string {
 	return x
 }
 
+func parseAddress() []string {
+	addrString := os.Getenv("REDIS_ADDRESSES")
+	if len(addrString) != 0 {
+		return splitAndTrim(addrString, ",", " ")
+	}
+	hostString := os.Getenv("REDIS_HOSTS")
+	portString := os.Getenv("REDIS_PORTS")
+	hosts := splitAndTrim(hostString, ",", " ")
+	ports := splitAndTrim(portString, ",", " ")
+	addrs := []string{}
+	if len(hosts) != len(ports) {
+		return addrs
+	}
+	for i := range hosts {
+		addrs = append(addrs, fmt.Sprintf("%s:%s", hosts[i], ports[i]))
+	}
+	return addrs
+}
+
 func writeToRedisList() error {
-	addrString := os.Getenv("REDIS_ADDRESS")
-	addrs := splitAndTrim(addrString, ",", " ")
+	addrs := parseAddress()
 	pass := os.Getenv("REDIS_PASSWORD")
 	opts := redis.ClusterOptions{
 		Addrs:    addrs,
@@ -44,8 +62,7 @@ func writeToRedisList() error {
 }
 
 func readFromRedisList() error {
-	addrString := os.Getenv("REDIS_ADDRESS")
-	addrs := splitAndTrim(addrString, ",", " ")
+	addrs := parseAddress()
 	pass := os.Getenv("REDIS_PASSWORD")
 	opts := redis.ClusterOptions{
 		Addrs:    addrs,
@@ -75,7 +92,7 @@ func readFromRedisList() error {
 
 func main() {
 	// Print env and args.
-	log.Println("REDIS_ADDRESS: ", os.Getenv("REDIS_ADDRESS"))
+	log.Println("REDIS_ADDRESSES: ", parseAddress())
 	log.Println("REDIS_PASSWORD: ", os.Getenv("REDIS_PASSWORD"))
 	log.Println("LIST_NAME: ", os.Getenv("LIST_NAME"))
 	log.Println("NO_LIST_ITEMS_TO_WRITE: ", os.Getenv("NO_LIST_ITEMS_TO_WRITE"))
