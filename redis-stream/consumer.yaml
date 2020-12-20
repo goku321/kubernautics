@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-streams-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-streams-consumer
+  template:
+    metadata:
+      labels:
+        app: redis-streams-consumer
+    spec:
+      containers:
+        - name: redis-streams-consumer
+          image: goku321/redis-cluster-streams:v1.6
+          command: ["./main"]
+          args: ["consumer"]
+          imagePullPolicy: Always
+          env:
+            - name: REDIS_HOSTS
+              value: "10.3.245.76"
+            - name: REDIS_PORTS
+              value: "6379"
+            - name: REDIS_STREAM_NAME
+              value: my-stream
+            - name: REDIS_STREAM_CONSUMER_GROUP_NAME
+              value: consumer-group-1
+            - name: REDIS_PASSWORD
+              value: "foobared"

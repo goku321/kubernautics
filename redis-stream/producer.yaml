@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-streams-producer
+spec:
+  template:
+    spec:
+      containers:
+      - name: producer
+        image: goku321/redis-cluster-streams:v1.5
+        command: ["./main"]
+        args: ["producer"]
+        imagePullPolicy: Always
+        env:
+            - name: REDIS_HOSTS
+              value: "10.3.254.125"
+            - name: REDIS_PORTS
+              value: "6379"
+            - name: REDIS_STREAM_NAME
+              value: my-stream
+            - name: NUM_MESSAGES
+              value: "200"
+            - name: REDIS_PASSWORD
+              value: "my-password"
+      restartPolicy: Never
+  backoffLimit: 10
