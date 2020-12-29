@@ -17,4 +17,4 @@ spec:
         spec:
             containers:
             - name: kube
-              image: goku321/go-handler:v1.0 
+              image: goku321/go-handler:v1.0
