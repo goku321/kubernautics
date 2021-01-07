@@ -8,3 +8,4 @@ spec:
       targetPort: 8081
   selector:
     app: kube
+  type: LoadBalancer
