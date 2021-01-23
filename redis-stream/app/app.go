@@ -54,7 +54,7 @@ func checkPendingEntries(c *redis.ClusterClient, stream, consumer string, ids *[
 			c.XAck(context.Background(), stream, consumer, *ids...)
 			return
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(2 * time.Second)
 	}
 }
 
@@ -74,6 +74,7 @@ func redisStreamConsumer() error {
 	}
 	pendingEntries := []string{}
 	go checkPendingEntries(client, stream, consumerGroup, &pendingEntries)
+	msgCount := 0
 	for {
 		length, err := client.XLen(context.Background(), stream).Result()
 		if err != nil {
@@ -94,9 +95,11 @@ func redisStreamConsumer() error {
 			if err != nil {
 				return fmt.Errorf("failed to read from redis stream: %v", err)
 			}
-			log.Printf("read %v from stream\n", res)
+			msgCount++
+			log.Printf("read %d messages from stream\n", msgCount)
 			pendingEntries = append(pendingEntries, res[0].Messages[0].ID)
 		}
+		time.Sleep(500 * time.Millisecond)
 	}
 }
 
