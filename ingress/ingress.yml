@@ -1,73 +1,73 @@
 # example-1: simple ingress
 # note: add an entry in dns for ditch.example.com with the ip of ingress controller
 
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: ditch
-# spec:
-#   rules:
-#     - host: ditch.example.com
-#       http:
-#         paths:
-#         - path: /
-#           backend:
-#             serviceName: svc-discovery
-#             servicePort: 8080
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ditch
+spec:
+  rules:
+    - host: ditch.example.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: svc-discovery
+            servicePort: 8080
 
-# ---
+---
 
-# # example-2: mapping multiple paths on the same host to different services
+# example-2: mapping multiple paths on the same host to different services
 
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: ditch
-# spec:
-#   rules:
-#     - host: ditch.example.com
-#       http:
-#         paths:
-#         - path: /jedi
-#           backend:
-#             serviceName: svc-force
-#             servicePort: 8080
-#         - path: /sith
-#           backend:
-#             serviceName: svc-darkside
-#             servicePort: 8080
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ditch
+spec:
+  rules:
+    - host: ditch.example.com
+      http:
+        paths:
+        - path: /jedi
+          backend:
+            serviceName: svc-force
+            servicePort: 8080
+        - path: /sith
+          backend:
+            serviceName: svc-darkside
+            servicePort: 8080
 
-# ---
+---
 
-# # example-2: service svc-force
+# example-2: service svc-force
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: svc-force
-# spec:
-#   ports:
-#     - port: 8080
-#       targetPort: 8081
-#   selector:
-#     app: kube
-#   type: LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-force
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8081
+  selector:
+    app: kube
+  type: LoadBalancer
 
-# ---
+---
 
-# # example-2: service svc-darkside
+# example-2: service svc-darkside
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: svc-darkside
-# spec:
-#   ports:
-#     - port: 8080
-#       targetPort: 8081
-#   selector:
-#     app: kube
-#   type: LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-darkside
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8081
+  selector:
+    app: kube
+  type: LoadBalancer
 
 ---
 
