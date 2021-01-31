@@ -1,4 +1,5 @@
-# simple ingress example
+# example-1: simple ingress
+# note: add an entry in dns for ditch.example.com with the ip of ingress controller
 
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -16,7 +17,7 @@ spec:
 
 ---
 
-# mapping multiple paths on the same host to different services
+# example-2: mapping multiple paths on the same host to different services
 
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -38,7 +39,7 @@ spec:
 
 ---
 
-# service: svc-force for above ingress
+# example-2: service svc-force
 
 apiVersion: v1
 kind: Service
@@ -54,7 +55,7 @@ spec:
 
 ---
 
-# service: svc-darkside for above ingress
+# example-2: service svc-darkside
 
 apiVersion: v1
 kind: Service
