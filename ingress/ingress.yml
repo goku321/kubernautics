@@ -1,3 +1,5 @@
+# simple ingress example
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -11,3 +13,57 @@ spec:
           backend:
             serviceName: svc-discovery
             servicePort: 8080
+
+---
+
+# mapping multiple paths on the same host to different services
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ditch
+spec:
+  rules:
+    - host: ditch.example.com
+      http:
+        paths:
+        - path: /jedi
+          backend:
+            serviceName: svc-force
+            servicePort: 8080
+        - path: /sith
+          backend:
+            serviceName: svc-darkside
+            servicePort: 8080
+
+---
+
+# service: svc-force for above ingress
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-force
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8081
+  selector:
+    app: kube
+  type: LoadBalancer
+
+---
+
+# service: svc-darkside for above ingress
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-darkside
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8081
+  selector:
+    app: kube
+  type: LoadBalancer
