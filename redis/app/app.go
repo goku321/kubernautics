@@ -57,6 +57,7 @@ func writeToRedisList() error {
 		if x.Err() != nil {
 			return fmt.Errorf("failed to write to redis list: %s", x.Err().Error())
 		}
+		time.Sleep(time.Millisecond * 100)
 	}
 	return nil
 }

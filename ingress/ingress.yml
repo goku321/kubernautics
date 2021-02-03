@@ -79,6 +79,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: svc-leia
+  namespace: ingress-ex-3
 spec:
   ports:
     - port: 8080
@@ -95,6 +96,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: svc-luke
+  namespace: ingress-ex-3
 spec:
   ports:
     - port: 8080
@@ -111,6 +113,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ditch
+  namespace: ingress-ex-3
 spec:
   rules:
     - host: ditch.example.com
