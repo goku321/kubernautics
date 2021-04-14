@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-    name: kube
+    name: kube-v1
 spec:
     replicas: 3
     selector:
@@ -13,6 +13,18 @@ spec:
         spec:
             containers:
             - name: kube
-              image: goku321/go-handler:v1.0
+              image: goku321/go-handler:v1
               ports:
               - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: panic-discovery
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8081
+  selector:
+    app: kube
+  type: LoadBalancer
