@@ -13,7 +13,7 @@ spec:
         spec:
             containers:
             - name: kube
-              image: goku321/go-handler:v1
+              image: goku321/go-handler:v1.1
               ports:
               - containerPort: 8080
 ---
