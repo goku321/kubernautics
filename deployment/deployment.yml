@@ -1,0 +1,15 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: kube
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: kube
+      labels:
+        app: kube
+    spec:
+      containers:
+      - name: go-api
+        image: goku321/go-handler:v1.0
