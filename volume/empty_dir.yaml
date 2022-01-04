@@ -18,7 +18,7 @@ spec:
       ports:
       - containerPort: 80
         protocol: TCP
-    volumes:
-    - name: html
-      emptyDir:
-        medium: memory
+  volumes:
+  - name: html
+    emptyDir:
+      medium: memory
