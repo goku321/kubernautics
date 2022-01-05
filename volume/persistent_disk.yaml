@@ -8,6 +8,10 @@ spec:
     gcePersistentDisk:
       pdName: mongodb
       fsType: ext4
+    # Un-comment to use AWS elastic block store
+    # awsElasticBlockStore:
+    #   volumeId: my-volume # ID of the EBS volume
+    #   fsType: ext4
   containers:
   - image: mongo
     name: mongodb
