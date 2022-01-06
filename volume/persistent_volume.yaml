@@ -6,7 +6,9 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
+  # Can be mounted by a single client for reading and writing.
   - ReadWriteOnce
+  # Or, can be mounted by multiple clients for reading only.
   - ReadOnlyMany
   # After the claim is released, the PV should be retained (not erased or deleted).
   persistentVolumeReclaimPolicy: Retain
