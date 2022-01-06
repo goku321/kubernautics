@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany
+  # After the claim is released, the PV should be retained (not erased or deleted).
+  persistentVolumeReclaimPolicy: Retain
+  # Backed by GCE persistent disk.
+  gcePersistentDisk:
+    pdName: mongodb
+    fsType: ext4
