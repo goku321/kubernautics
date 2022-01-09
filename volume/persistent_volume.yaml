@@ -11,6 +11,7 @@ spec:
   # Or, can be mounted by multiple clients for reading only.
   - ReadOnlyMany
   # After the claim is released, the PV should be retained (not erased or deleted).
+  # Two other reclaim policies are: Recycle and Delete.
   persistentVolumeReclaimPolicy: Retain
   # Backed by GCE persistent disk.
   gcePersistentDisk:
