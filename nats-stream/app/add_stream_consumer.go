@@ -10,6 +10,7 @@ import (
 
 func main() {
 	// NATS_ADDRESS = nats://nats.<namespace>.svc.cluster.local:4222
+	// nats.nats-jetstream-test-nats-ns.svc.cluster.local
 	natsAddress := os.Getenv("NATS_ADDRESS")
 	if natsAddress == "" {
 		log.Fatal("NATS address cannot be empty")
@@ -25,21 +26,23 @@ func main() {
 		log.Fatalf("failed to create JS context: %s", err)
 	}
 
-	sub, err := js.PullSubscribe("ORDERS.*", "PULL_CONSUMER")
+	// Create a stream.
+	_, err = js.AddStream(&nats.StreamConfig{
+		Name:     "mystream",
+		Subjects: []string{"ORDERS.*"},
+		Storage:  nats.FileStorage,
+		MaxAge:   time.Hour * 1,
+	})
 	if err != nil {
-		log.Fatalf("failed to create pull subscription: %s", err)
+		log.Fatalf("failed to create stream: %s\n", err)
 	}
 
-	batch := 5
-	for i := 0; i < 50; i++ {
-		msgs, err := sub.Fetch(batch, nats.MaxWait(2*time.Second))
-		if err != nil {
-			log.Fatalf("failed to get message: %s", err)
-		}
-		// Ack messages.
-		for _, msg := range msgs {
-			msg.AckSync()
-		}
-		time.Sleep(1 * time.Second)
+	// Create a consumer for the stream.
+	_, err = js.AddConsumer("mystream", &nats.ConsumerConfig{
+		Durable: "PULL_CONSUMER",
+		AckPolicy: nats.AckExplicitPolicy,
+	})
+	if err != nil {
+		log.Fatalf("failed to create consumer: %s\n", err)
 	}
 }
